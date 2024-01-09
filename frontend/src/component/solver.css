@@ -1,0 +1,19 @@
+.solver {
+    padding: 20px;
+    margin: auto;
+    max-width: 1200px;
+}
+
+Label {
+    font-size: 30px;
+    font-style: bold;
+}
+
+.plaintext {
+    overflow-wrap: break-word;
+}
+
+.btn {
+    width: 100%;
+    font-style: bold;
+}
