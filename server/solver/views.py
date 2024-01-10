@@ -1,23 +1,14 @@
-import sys
-sys.path.insert(0, './solver')
+from solver.service.Solver import Solver
 
-from service.Solver import Solver
-
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views import View
 from django.views.decorators.http import require_http_methods
 import json
-from django.views.decorators.csrf import get_token
 from django_ratelimit.decorators import ratelimit
 
 solver = Solver()
 
 # Create your views here.
-
-@require_http_methods(["GET"])
-def csrf(request):
-    return JsonResponse({"token": get_token(request)})
 
 @ratelimit(key='ip', rate='1/s')
 @require_http_methods(["POST"])

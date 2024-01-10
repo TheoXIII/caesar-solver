@@ -30,22 +30,11 @@ export default class Solver extends Component<IProps, IState> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.setSolution = this.setSolution.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.getCookie = this.getCookie.bind(this);
         this.updateLength = this.updateLength.bind(this);
-    }
-
-    componentDidMount() {
-        if (!Cookies.get('csrftoken'))
-            this.getCookie();
     }
 
     setSolution(result: {key: number, plaintext: string}) {
         this.setState({solved: true, solutionKey: result.key, solutionPlaintext: result.plaintext});
-    }
-
-    async getCookie() {
-        axios.get('/api/solver/csrf')
-        .then((response) => Cookies.set('csrftoken', response.data.token))
     }
 
     updateLength(ciphertext: string) {
@@ -73,7 +62,7 @@ export default class Solver extends Component<IProps, IState> {
         axios.post('/api/solver/', {
             ciphertext: this.state.ciphertext,
         }, {
-            headers: { 'X-CSRFToken': Cookies.get('csrftoken'), 'Test-Header': '123' }
+            headers: { 'X-CSRFToken': Cookies.get('csrftoken') }
         })
         .then(response => this.setSolution(response.data))
         .catch((error) => console.log(error))
@@ -87,7 +76,7 @@ export default class Solver extends Component<IProps, IState> {
                     <Input type="textarea" name="ciphertext" id="ciphertext" value={this.state.ciphertext}
                         onChange={this.handleChange}/>
                 </FormGroup>
-                <FormGroup class="submit">
+                <FormGroup className="submit">
                     <Button color="primary" type="submit" onClick={this.handleSubmit}>Solve</Button>
                 </FormGroup>
 

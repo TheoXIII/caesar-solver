@@ -25,6 +25,8 @@ from django.urls import include, path
 urlpatterns = [
     path('api/', include([
         path("solver/", include("solver.urls")),
+        path("sentiment-analysis/", include("sentiment_analysis.urls")),
+        path('csrf/', include("csrf.urls")),
         path('admin/', admin.site.urls),
     ])),
 ]

@@ -1,6 +1,4 @@
-import sys
-sys.path.insert(0, './service')
-from service.ClassifierLSTM import ClassifierLSTM
+from solver.service.ClassifierLSTM import ClassifierLSTM
 
 import torch
 from torch import nn
