@@ -1,0 +1,10 @@
+.character-modal {
+    width: 50%;
+    padding: 20px;
+    margin: auto;
+    translate: (0, 200);
+    display: 'block';
+    position: 'initial';
+    border: 1px solid #E9ECEF;
+    border-radius: 25px;
+}

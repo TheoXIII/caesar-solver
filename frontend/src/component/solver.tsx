@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import { Form, FormGroup, Input, Label } from 'reactstrap';
+import {Component} from 'react'
+import { FormGroup, Input, Label } from 'reactstrap';
 import { Button, Alert } from 'react-bootstrap'
 import axios from 'axios'
 import Cookies from 'js-cookie'
