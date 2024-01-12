@@ -1,7 +1,18 @@
 .positive {
     background-color: #D1E7DD;
+    color: #D1E7DD;
 }
 
 .negative {
     background-color: #F8D7DA;
+    color: #F8D7DA;
+}
+
+.neutral {
+    background-color: #E9ECEF;
+    color: #E9ECEF;
+}
+
+.none {
+    color: white;
 }

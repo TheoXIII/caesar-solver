@@ -1,4 +1,4 @@
-import {Component} from 'react'
+import React, {Component} from 'react'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
@@ -21,21 +21,11 @@ interface IState {
     showModal: boolean,
     modalText: string,
     modalScore: number,
+    typing: boolean,
 }
 
-//WIP
-/*function concatTokens(tokens: string[]) {
-    let concatenatedTokens: string[] = [];
-    for (let token of tokens) {
-        if (token.match(/^[.,:!?]/))
-            concatenatedTokens[-1].concat(token)
-        else
-            concatenatedTokens.push(token)
-    }
-    return concatenatedTokens
-}*/
-
 export default class SentimentAnalysis extends Component<IProps, IState> {
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -46,6 +36,7 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
             showModal: false,
             modalText: "",
             modalScore: 0,
+            typing: true,
         };
 
         this.setVars = this.setVars.bind(this);
@@ -54,6 +45,11 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
         this.tokensToIndices = this.tokensToIndices.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
+        this.passClick = this.passClick.bind(this);
+        this.passHover = this.passHover.bind(this);
+        this.getTypingClasses = this.getTypingClasses.bind(this);
+        this.InfoBox = this.InfoBox.bind(this);
+        //this.mouseMove = this.mouseMove.bind(this);
     }
 
     /*tokensToIndices(assessments: [string[], number][]) {
@@ -76,7 +72,7 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
         for (let i=0; i < numAssessments; i++) {
             let startGap : number | null = null;
             for (let j=0; j < indexAssessments.length-1; j++) {
-                if (indexAssessments[j] == i && indexAssessments[j+1] != i)
+                if (indexAssessments[j] === i && indexAssessments[j+1] !== i)
                     startGap = j+1;
                 else if (startGap && text[j] !== ' ')
                     startGap = null;
@@ -124,12 +120,15 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
 
     setVars(result: {polarity: number, assessments: [string[], number][]}) {
         this.setState({polarity: result.polarity, assessments: result.assessments, assessmentsIndices: this.tokensToIndices(result.assessments)});
-        console.log(result.assessments[0])
     }
 
-    async handleChange(event: any) {
-        this.setState({text: event.target.value});
-        this.submit(event.target.value);
+    async handleChange(value: string | null) {
+        if (value) {
+            this.setState({text: value});
+            this.submit(value);
+            //if (value.length > 0)
+            //    this.setState({pointerEvents: 'none'})
+        }
 
     }
 
@@ -151,25 +150,54 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
         this.setState({showModal: false})
     }
 
+    passClick(e: any) {
+        e.stopPropagation();
+        this.setState({typing: true});
+    }
+
+    passHover() {
+        if (this.state.assessments.length > 0)
+            this.setState({typing: false});
+    }
+
+    getTypingClasses() {
+        if (this.state.typing)
+            return "typing activated"
+        return "typing"
+    }
+
+    InfoBox() {
+        if (this.state.assessments.length > 0) {
+            if (this.state.typing)
+                return(<span>Click out to hover</span>)
+            return(<span>Click box to type</span>)
+        }
+        return (<></>)
+    }
+
     render() {
         const characters = [];
 
         for (let i=0; i < this.state.text.length; i++)
             characters.push(<Character key={i} character={this.state.text[i]} assessment={this.state.assessments[this.state.assessmentsIndices[i]]} parentShow={this.show} parentHide={this.hide}/>)
         
+        if (characters.length === 0)
+            characters.push(<span className="gray">Text</span>)
         
 
         return(
-            <div className="sentiment-analysis">
-                <FormGroup>
-                    <Label for="text">Sentiment Analysis</Label>
-                    <Input type="textarea" name="text" id="text" value={this.state.text}
-                        onChange={this.handleChange}/>
-                </FormGroup>
+            <div onClick={this.passHover} className="sentiment-analysis">
                 
                 <ShowPolarity polarity={this.state.polarity}/>
 
-                <p>{characters}</p>
+                <div className="text">
+                    <p onClick={this.passClick} id="display" className="display">{characters}</p>
+                    <p onClick={e => e.stopPropagation()} /*style={{pointerEvents: this.state.pointerEvents}}*/ className={this.getTypingClasses()} onInput={e => this.handleChange(e.currentTarget.textContent)} contentEditable></p>
+                </div>
+
+                <div className="info">
+                    <this.InfoBox/>
+                </div>
 
                 { this.state.showModal &&
                     <CharacterModal text={this.state.modalText} score={this.state.modalScore}/>

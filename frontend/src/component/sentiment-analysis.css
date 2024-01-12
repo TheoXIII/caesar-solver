@@ -1,5 +1,48 @@
 .sentiment-analysis {
     padding: 20px;
     margin: auto;
-    max-width: 1200px;
+    max-width: 800px;
+}
+
+.text {
+    text-align: left;
+    display: block;
+}
+
+p.display {
+    z-index: 0;
+    padding: 10px;
+}
+
+p.display:hover {
+    cursor: pointer;
+}
+
+p.typing {
+    position: relative;
+    top: -60px;
+    z-index: 1;
+    color: black;
+    border: 1px solid #E9ECEF;
+    border-radius: 5px;
+    pointer-events: none;
+    padding: 10px;
+}
+
+p.activated {
+    border-color: black;
+    pointer-events: all;
+}
+
+.info {
+    color: #575757;
+    padding-bottom: 10px;
+}
+
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+  
+.gray {
+    color: lightgray;
 }

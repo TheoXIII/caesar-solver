@@ -41,8 +41,10 @@ export default class Character extends Component<IProps, IState> {
                 return 'positive'
             else if (this.props.assessment[1] < 0)
                 return 'negative'
+            else
+                return 'neutral'
         }
-        return 'neutral'
+        return 'none'
     }
 
     render() {
