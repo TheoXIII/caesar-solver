@@ -5,7 +5,10 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci --silent
+RUN npm config set fetch-retry-mintimeout 100000
+RUN npm config set fetch-retry-maxtimeout 200000
+
+RUN npm ci
 RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
 RUN npm run build

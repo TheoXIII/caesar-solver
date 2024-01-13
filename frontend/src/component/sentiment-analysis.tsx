@@ -2,8 +2,6 @@ import React, {Component} from 'react'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
-import { FormGroup, Input, Label } from 'reactstrap';
-
 import Character from './sentiment-analysis-components/character';
 import ShowPolarity from './sentiment-analysis-components/showPolarity'
 import CharacterModal from './sentiment-analysis-components/characterModal'
@@ -175,6 +173,12 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
         return (<></>)
     }
 
+    keyPress(event: any) {
+        if(event.key == "Enter") {
+            event.preventDefault();
+          }
+    }
+
     render() {
         const characters = [];
 
@@ -182,7 +186,7 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
             characters.push(<Character key={i} character={this.state.text[i]} assessment={this.state.assessments[this.state.assessmentsIndices[i]]} parentShow={this.show} parentHide={this.hide}/>)
         
         if (characters.length === 0)
-            characters.push(<span className="gray">Text</span>)
+            characters.push(<span className="gray" key="0">Text</span>)
         
 
         return(
@@ -192,16 +196,18 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
 
                 <div className="text">
                     <p onClick={this.passClick} id="display" className="display">{characters}</p>
-                    <p onClick={e => e.stopPropagation()} /*style={{pointerEvents: this.state.pointerEvents}}*/ className={this.getTypingClasses()} onInput={e => this.handleChange(e.currentTarget.textContent)} contentEditable></p>
+                    <div className={this.getTypingClasses()}>
+                        <p onClick={e => e.stopPropagation()} onKeyDown={this.keyPress} /*style={{pointerEvents: this.state.pointerEvents}} className={this.getTypingClasses()}*/ onInput={e => this.handleChange(e.currentTarget.textContent)} contentEditable></p>
+                        <div className="info">
+                            <this.InfoBox/>
+                        </div>
+
+                        { this.state.showModal &&
+                            <CharacterModal text={this.state.modalText} score={this.state.modalScore}/>
+                        }
+                    </div>
                 </div>
 
-                <div className="info">
-                    <this.InfoBox/>
-                </div>
-
-                { this.state.showModal &&
-                    <CharacterModal text={this.state.modalText} score={this.state.modalScore}/>
-                }
             </div>
         )
     }
