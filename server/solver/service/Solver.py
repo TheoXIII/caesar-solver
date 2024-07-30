@@ -1,4 +1,4 @@
-from solver.service.ClassifierLSTM import ClassifierLSTM
+from solver.service import ClassifierLSTM
 
 import torch
 from torch import nn

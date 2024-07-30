@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Page from './component/page';
 import Solver from './component/solver';
 import SentimentAnalysis from './component/sentiment-analysis';
+import AttentionVisualizer from './component/attention-visualizer'
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
               <Route path="/">
                   <Route path="caesar-solver" element={<Solver/>}/>
                   <Route path="sentiment-analysis" element={<SentimentAnalysis/>}/>
+                  <Route path="attention-visualizer" element={<AttentionVisualizer/>}/>
               </Route>
           </Routes>
       </BrowserRouter>

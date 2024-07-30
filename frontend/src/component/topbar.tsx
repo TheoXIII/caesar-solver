@@ -9,6 +9,7 @@ export default function TopBar() {
             <Nav className="me-auto">
                 <Nav.Link href="/sentiment-analysis">Sentiment Analysis</Nav.Link>
                 <Nav.Link href="/caesar-solver">Caesar Solver</Nav.Link>
+                <Nav.Link href="/attention-visualizer">Attention Visualizer</Nav.Link>
             </Nav>
             </Container>
         </Navbar>

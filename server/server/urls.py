@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/', include([
         path("solver/", include("solver.urls")),
         path("sentiment-analysis/", include("sentiment_analysis.urls")),
+        path("attention-visualizer/", include("attention_visualizer.urls")),
         path('csrf/', include("csrf.urls")),
         path('admin/', admin.site.urls),
     ])),

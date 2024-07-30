@@ -1,0 +1,1 @@
+from attention_visualizer.service.VectorGetter import VectorGetter
