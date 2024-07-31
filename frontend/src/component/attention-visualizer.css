@@ -17,3 +17,13 @@ Label {
     width: 100%;
     font-style: bold;
 }
+
+.text-container {
+    max-width: 1200px;
+}
+
+.text {
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+}

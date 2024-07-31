@@ -1,0 +1,18 @@
+.positive {
+    background-color: #D1E7DD;
+}
+
+.negative {
+    background-color: #F8D7DA;
+}
+
+.neutral {
+    background-color: #E9ECEF;
+}
+
+.token {
+    color: black;
+    /*padding: 0px 5px;*/
+    border: 1px solid #575757;
+    /*word-wrap: break-word;*/
+}

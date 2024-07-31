@@ -185,7 +185,7 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
         }
         
         if (characters.length === 0)
-            characters.push(<span className="gray" key="0">Text</span>)
+            characters.push(<span className="gray" key={0}>Text</span>)
         
 
         return(
@@ -196,7 +196,7 @@ export default class SentimentAnalysis extends Component<IProps, IState> {
                 <div className="text">
                     <p onClick={this.passClick} id="display" className="display">{characters}</p>
                     <div className={this.getTypingClasses()}>
-                        <p /*ref={this.input}*/ onClick={e => e.stopPropagation()} /*onKeyDown={this.keyPress}*/ onInput={e => this.handleChange(e.currentTarget.innerHTML)} contentEditable></p>
+                        <p onClick={e => e.stopPropagation()} onInput={e => this.handleChange(e.currentTarget.innerHTML)} contentEditable></p>
                         <div className="info">
                             <this.InfoBox/>
                         </div>
