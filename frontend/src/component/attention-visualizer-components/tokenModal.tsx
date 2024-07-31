@@ -1,17 +1,17 @@
-import ShowPolarity from '../sentiment-analysis-components/showPolarity'
+import ShowAttention from './showAttention'
 
 import './token-modal.css'
 
 interface IProps {
     text: string,
-    score: number,
+    score: number | null,
 }
 
 export default function TokenModal(props: IProps) {
     return (
         <div className="token-modal">
             <p>{props.text}</p>
-            <ShowPolarity polarity={props.score}/>
+            <ShowAttention attention={props.score}/>
         </div>
     )
 }

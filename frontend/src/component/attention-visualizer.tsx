@@ -3,7 +3,7 @@ import { FormGroup, Input, Label } from 'reactstrap';
 import { Button } from 'react-bootstrap'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { dot } from 'mathjs'
+import { sum, dot } from 'mathjs'
 import './attention-visualizer.css'
 import Token from './attention-visualizer-components/token'
 import TokenModal from './attention-visualizer-components/tokenModal'
@@ -16,8 +16,12 @@ interface IState {
     vectorMapping: {token: string, vector: number[]}[],
     selectedTokenId: number | null,
     showModal: boolean,
-    modalScore: number,
+    modalScore: number | null,
     modalText: string
+}
+
+function softmax(arr: number[]) {
+    return arr.map((value) => Math.exp(value) / sum(arr.map( Math.exp )));
 }
 
 export default class Solver extends Component<IProps, IState> {
@@ -27,7 +31,7 @@ export default class Solver extends Component<IProps, IState> {
             inputText: "",
             vectorMapping: [],
             showModal: false,
-            modalScore: 0,
+            modalScore: null,
             modalText: "",
             selectedTokenId: null,
         };
@@ -39,6 +43,7 @@ export default class Solver extends Component<IProps, IState> {
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
         this.getScore = this.getScore.bind(this);
+        this.getScores = this.getScores.bind(this);
         this.InfoBox = this.InfoBox.bind(this)
     }
 
@@ -76,12 +81,25 @@ export default class Solver extends Component<IProps, IState> {
         .catch((error) => console.log(error))
     }
 
-    getScore(vector: number[]): number {
+    getScore(vector: number[]): number | null {
         if (this.state.selectedTokenId === null)
-            return 0
+            return null
         const comparisonVector = this.state.vectorMapping[this.state.selectedTokenId]["vector"]
         // return dot(vector, comparisonVector)
         return dot(vector, comparisonVector) / (Math.sqrt(dot(vector, vector)) * Math.sqrt(dot(comparisonVector, comparisonVector)))
+    }
+
+    getScores(): number[] {
+        if (this.state.selectedTokenId === null)
+            return Array(this.state.vectorMapping.length).fill(0)
+        const comparisonVector = this.state.vectorMapping[this.state.selectedTokenId]["vector"]
+        const scores = []
+        for (let mapping of this.state.vectorMapping) {
+            const vector = mapping["vector"]
+            scores.push(dot(vector, comparisonVector) / (Math.sqrt(dot(vector, vector)) * Math.sqrt(dot(comparisonVector, comparisonVector))))
+        }
+        
+        return softmax(scores)
     }
 
     InfoBox() {
@@ -95,7 +113,8 @@ export default class Solver extends Component<IProps, IState> {
 
     render() {
         const tokens: any = [];
-        this.state.vectorMapping.forEach((value, i) => tokens.push(<Token key={i} index={i} text={value["token"]} score={this.getScore(value["vector"])} parentShow={this.show} parentHide={this.hide} setTargetToken={this.setTargetToken}/>))
+        //const scores = this.getScores()
+        this.state.vectorMapping.forEach((value, i) => tokens.push(<Token key={i} index={i} text={value["token"]} score={this.getScore(value["vector"])} /*score={scores[i]}*/ parentShow={this.show} parentHide={this.hide} setTargetToken={this.setTargetToken}/>))
 
         return(
             <div className="attention-visualizer">

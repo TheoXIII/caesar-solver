@@ -1,11 +1,12 @@
 import {Component} from 'react'
+import getColor from './getColor';
 
 import './token.css'
 
 interface IProps {
     index: number,
     text: string,
-    score: number,
+    score: number | null,
     parentShow: any,
     parentHide: any,
     setTargetToken: any,
@@ -22,7 +23,6 @@ export default class Token extends Component<IProps, IState> {
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
         this.click = this.click.bind(this);
-        this.getColor = this.getColor.bind(this);
     }
 
     show() {
@@ -37,18 +37,9 @@ export default class Token extends Component<IProps, IState> {
         this.props.setTargetToken(this.props.index);
     }
 
-    getColor() {
-        if (this.props.score > 0)
-            return 'positive'
-        else if (this.props.score < 0)
-            return 'negative'
-        else
-            return 'neutral'
-    }
-
     render() {
         return (
-            <span className={`token ${this.getColor()}`} onMouseEnter={this.show} onMouseLeave={this.hide} onClick={this.click}>&nbsp;{this.props.text} </span>
+            <span className={`token`} style={{backgroundColor: getColor(this.props.score)}} onMouseEnter={this.show} onMouseLeave={this.hide} onClick={this.click}>&nbsp;{this.props.text} </span>
         );
     }
 }
