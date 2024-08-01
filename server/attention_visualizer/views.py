@@ -1,13 +1,16 @@
 from attention_visualizer.service import XLNetVectorGetter
 from attention_visualizer.service import BertVectorGetter
+from attention_visualizer.service import GPT2VectorGetter
 from django_ratelimit.decorators import ratelimit
 from django.views.decorators.http import require_http_methods
 import json
 from django.http import JsonResponse
 
+
 vector_getter_mapping = {
     "BERT": BertVectorGetter(),
     "XLNet": XLNetVectorGetter(),
+    "GPT2": GPT2VectorGetter(),
 }
 
 

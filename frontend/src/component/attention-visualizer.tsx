@@ -16,7 +16,7 @@ import './attention-visualizer.css'
 import Token from './attention-visualizer-components/token'
 import TokenModal from './attention-visualizer-components/tokenModal'
 
-const DROP_DOWN_OPTIONS = ["XLNet", "BERT"]
+const DROP_DOWN_OPTIONS = ["XLNet", "BERT", "GPT2"]
 
 interface IProps {    
 }

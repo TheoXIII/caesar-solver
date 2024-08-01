@@ -1,2 +1,3 @@
 from attention_visualizer.service.XLNetVectorGetter import XLNetVectorGetter
 from attention_visualizer.service.BertVectorGetter import BertVectorGetter
+from attention_visualizer.service.GPT2VectorGetter import GPT2VectorGetter
