@@ -2,3 +2,5 @@ node_modules
 venv
 frontend/node_modules
 frontend/build
+server/.idea
+**/__pycache__

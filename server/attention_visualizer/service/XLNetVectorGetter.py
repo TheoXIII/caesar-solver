@@ -1,6 +1,6 @@
 from transformers import XLNetTokenizer, XLNetModel
 
-class VectorGetter:
+class XLNetVectorGetter:
     def __init__(self):
         self.tokenizer = XLNetTokenizer.from_pretrained('xlnet-base-cased')
         self.model = XLNetModel.from_pretrained('xlnet-base-cased')

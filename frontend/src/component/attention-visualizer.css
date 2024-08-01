@@ -4,6 +4,12 @@
     max-width: 1200px;
 }
 
+textarea {
+    resize: vertical; 
+    height: 150px;
+    max-height: 150px;
+}
+
 Label {
     font-size: 30px;
     font-style: bold;
@@ -20,10 +26,25 @@ Label {
 
 .text-container {
     max-width: 1200px;
+    max-height: 350px;
+    overflow-y: scroll;
 }
 
 .text {
     font-size: 24px;
     cursor: pointer;
     text-align: center;
+}
+
+.drop-down-menu {
+    width: 100%;
+    text-align: center;
+}
+
+.drop-down-item:hover {
+    background-color: #E9ECEF;
+}
+
+.loading {
+    color: #575757;
 }

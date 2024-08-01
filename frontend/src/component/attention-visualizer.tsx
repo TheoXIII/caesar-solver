@@ -1,5 +1,13 @@
 import {Component} from 'react'
-import { FormGroup, Input, Label } from 'reactstrap';
+import {
+    FormGroup,
+    Input,
+    Label,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+} from 'reactstrap';
 import { Button } from 'react-bootstrap'
 import axios from 'axios'
 import Cookies from 'js-cookie'
@@ -7,6 +15,8 @@ import { sum, dot } from 'mathjs'
 import './attention-visualizer.css'
 import Token from './attention-visualizer-components/token'
 import TokenModal from './attention-visualizer-components/tokenModal'
+
+const DROP_DOWN_OPTIONS = ["XLNet", "BERT"]
 
 interface IProps {    
 }
@@ -17,7 +27,10 @@ interface IState {
     selectedTokenId: number | null,
     showModal: boolean,
     modalScore: number | null,
-    modalText: string
+    modalText: string,
+    dropDownOpen: boolean,
+    selectedModel: string,
+    loading: boolean
 }
 
 function softmax(arr: number[]) {
@@ -34,6 +47,9 @@ export default class Solver extends Component<IProps, IState> {
             modalScore: null,
             modalText: "",
             selectedTokenId: null,
+            dropDownOpen: false,
+            selectedModel: DROP_DOWN_OPTIONS[0],
+            loading: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,11 +59,12 @@ export default class Solver extends Component<IProps, IState> {
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
         this.getScore = this.getScore.bind(this);
-        this.getScores = this.getScores.bind(this);
+        this.toggle = this.toggle.bind(this);
         this.InfoBox = this.InfoBox.bind(this)
     }
 
     setVectorMapping(result: {vectorMapping: {token: string, vector: number[]}[]}) {
+        this.setState({loading: false})
         this.setState({vectorMapping: result.vectorMapping});
     }
 
@@ -71,9 +88,11 @@ export default class Solver extends Component<IProps, IState> {
 
     async handleSubmit(event: any) {
         event.preventDefault();
+        this.setState({loading: true, vectorMapping: [], selectedTokenId: null})
 
         axios.post('/api/attention-visualizer/', {
             text: this.state.inputText,
+            model: this.state.selectedModel
         }, {
             headers: { 'X-CSRFToken': Cookies.get('csrftoken') }
         })
@@ -85,21 +104,11 @@ export default class Solver extends Component<IProps, IState> {
         if (this.state.selectedTokenId === null)
             return null
         const comparisonVector = this.state.vectorMapping[this.state.selectedTokenId]["vector"]
-        // return dot(vector, comparisonVector)
         return dot(vector, comparisonVector) / (Math.sqrt(dot(vector, vector)) * Math.sqrt(dot(comparisonVector, comparisonVector)))
     }
 
-    getScores(): number[] {
-        if (this.state.selectedTokenId === null)
-            return Array(this.state.vectorMapping.length).fill(0)
-        const comparisonVector = this.state.vectorMapping[this.state.selectedTokenId]["vector"]
-        const scores = []
-        for (let mapping of this.state.vectorMapping) {
-            const vector = mapping["vector"]
-            scores.push(dot(vector, comparisonVector) / (Math.sqrt(dot(vector, vector)) * Math.sqrt(dot(comparisonVector, comparisonVector))))
-        }
-        
-        return softmax(scores)
+    toggle() {
+        this.setState({dropDownOpen: !this.state.dropDownOpen})
     }
 
     InfoBox() {
@@ -113,8 +122,18 @@ export default class Solver extends Component<IProps, IState> {
 
     render() {
         const tokens: any = [];
-        //const scores = this.getScores()
         this.state.vectorMapping.forEach((value, i) => tokens.push(<Token key={i} index={i} text={value["token"]} score={this.getScore(value["vector"])} /*score={scores[i]}*/ parentShow={this.show} parentHide={this.hide} setTargetToken={this.setTargetToken}/>))
+        
+        const dropDownOptions: any = []
+        
+        if (this.state.loading)
+            document.body.style.cursor = 'wait';
+        else
+            document.body.style.cursor = 'auto';
+
+        for (const option of DROP_DOWN_OPTIONS)
+            dropDownOptions.push(<DropdownItem className="drop-down-item" onClick={() => this.setState({selectedModel: option})}>{option}</DropdownItem>)
+
 
         return(
             <div className="attention-visualizer">
@@ -124,10 +143,23 @@ export default class Solver extends Component<IProps, IState> {
                         <Input type="textarea" name="inputText" id="inputText" value={this.state.inputText}
                             onChange={this.handleChange}/>
                     </FormGroup>
+                    <FormGroup>
+                        <Dropdown isOpen={this.state.dropDownOpen} toggle={this.toggle}>
+                            <DropdownToggle caret>{this.state.selectedModel}</DropdownToggle>
+                            <DropdownMenu className="drop-down-menu">
+                                {dropDownOptions}
+                            </DropdownMenu>
+                        </Dropdown>
+                    </FormGroup>
                     <FormGroup className="submit">
                         <Button color="primary" type="submit" onClick={this.handleSubmit}>Submit</Button>
                     </FormGroup>
                 </div>
+
+                { this.state.loading &&
+                    <p className="loading">Loading...</p>
+                }
+
                 <div className="text-container">
                     <p className="text">{tokens}</p>
                 </div>
