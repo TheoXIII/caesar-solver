@@ -1,11 +1,12 @@
 services:
-    server:
-        build:
-            context: ./server
-        ports:
-            - "8000:8000"
-    frontend:
-        build:
-            context: ./frontend
-        ports:
-            - "8080:80"
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8000:8000"
+      
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"
